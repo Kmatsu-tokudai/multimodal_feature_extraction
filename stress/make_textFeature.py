@@ -15,7 +15,6 @@ import pprint
 from sudachipy import tokenizer
 from sudachipy import dictionary
 
-
 # pkshatech/RoSEtta-base-ja(テキスト特徴量)用
 from sentence_transformers import SentenceTransformer
 
@@ -35,8 +34,6 @@ def toStr(vec):
 
 
 rosetta_model = SentenceTransformer("pkshatech/RoSEtta-base-ja",trust_remote_code=True)
-#e5_tokenizer = AutoTokenizer.from_pretrained('intfloat/multilingual-e5-large')
-#e5_model = AutoModel.from_pretrained('intfloat/multilingual-e5-large')
 e5_tokenizer = AutoTokenizer.from_pretrained("Numind/e5-multilingual-sentiment_analysis")
 e5_model = AutoModel.from_pretrained("Numind/e5-multilingual-sentiment_analysis")
 bert_modelname='nlptown/bert-base-multilingual-uncased-sentiment'
@@ -109,10 +106,6 @@ def tok( x, tokenizer_obj, mode):
 # SentimentJA2によるテキスト感情分析
 def extSJA2( input_texts):
     emotions = ['angry', 'disgust', 'fear', 'happy', 'sad', 'surprise']
-    #with open("./model/model.pkl", "rb") as f:
-    #    vect, models = pickle.load(f)
-    #tokenizer_obj = dictionary.Dictionary().create()
-    #mode = tokenizer.Tokenizer.SplitMode.C
     v = vect.transform(tok(x, tokenizer_obj, mode) for x in input_texts)
     out = [{"text": x} for x in input_texts]
     for n, m in models:
@@ -121,12 +114,9 @@ def extSJA2( input_texts):
 
     results = []
     for i, (txt, o) in enumerate(zip(input_texts, out)):
-        #svs = ''
         vv = []
         for e in emotions:
-            #svs += f'{o[e]:.3f}\t'
             vv.append(o[e])
-        #svs = svs.rstrip('\t')
         results.append([txt, vv])
 
     return results
@@ -168,29 +158,24 @@ def main():
             except Exception as e:            
                 print("Bert Error:", txt)
                 break
-                #continue
 
             try:
                 e5 = extE5([txt])
             except Exception as e:
                 print("E5 error: ", txt)
                 break
-                #continue
 
             try:
                 rose = extRosetta([txt])
             except Exception as e:
                 print("Rosetta error:", txt)
                 break
-                #continue
             
             try:
                 sj2 = extSJA2([txt])
             except Exception as e:
                 print("SentiJA2 error!", txt)
                 break
-                #continue
-            
 
             bstr = toStr(bert)
             estr = toStr(e5[0])
@@ -204,8 +189,6 @@ def main():
             wf.write(f'{at}\t{fn}\t{st}\t{en}\t{txt}\t{bstr}\t{estr}\t{sjs}\t{rss}\n')
 
     wf.close
-
-
 
 
 
