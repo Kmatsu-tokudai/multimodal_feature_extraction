@@ -122,12 +122,9 @@ def toExt(speech_path, ftype, id):
         sample_width = wav_file.getsampwidth()
         frame_count = wav_file.getnframes()
         
-        # 10秒ごとにファイルを区切る(10秒以下の場合は1秒単位で区切る)
-        #if byo > 10:
+        # 10秒ごとにファイルを区切る
         segment_length = 10 * frame_rate
-        #else:
-        #    segment_length = 1 * frame_rate
-    
+        
         sumv = []
         # WAVファイルを読み込む
         for i in range(0, frame_count, segment_length):
@@ -173,11 +170,10 @@ for ftype in ['hubert', 'wav2vec']:
     wf = open(f'{odir}/{ftype}.tsv', 'w')
     wf.write(f'id\tstart\tend\t{ftype}\n')
 
-    fdir='./split_wav_16k' ###
+    fdir='./split_wav_16k' 
     flg = 0
     for dirpath in glob.glob(f'{fdir}/*'):
         dir = dirpath.split('/')[-1]
-        #print(dir)
         id = dir #.split('_')
         for wvpath in glob.glob(f'{dirpath}/*.wav'):
             bn = os.path.basename(wvpath)
@@ -197,9 +193,6 @@ for ftype in ['hubert', 'wav2vec']:
                 continue
             vt = toStr(ov)
             wf.write(f'{id}\t{st}\t{et}\t{vt}\n')        
-
-
-
     
     wf.close
 
