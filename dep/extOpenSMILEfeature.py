@@ -1,15 +1,13 @@
 # OpenSMILEによる音響特徴抽出
+# conda activate opensmile
 import sys, os, re, glob
-#import pandas as pd
 import numpy as np
-#import wave
 import opensmile
 
 smile = opensmile.Smile(
     feature_set=opensmile.FeatureSet.GeMAPSv01a,
     feature_level=opensmile.FeatureLevel.Functionals,
 )
-
 
 odir = './opensmile_feature'
 if not os.path.exists(odir):
@@ -43,7 +41,6 @@ def extOpenSMILE(speech_path):
     feature = smile.process_file(speech_path)
     return feature
 
-
 wf = open(f'{odir}/dep_opensmile_vec.tsv', 'w')
 wf.write(f'id\tstart\tend\tvector\n')
 
@@ -53,24 +50,19 @@ for dirpath in glob.glob(f'{fdir}/*'):
     print(dir)
     id = dir 
     for wvpath in glob.glob(f'{dirpath}/*.wav'):
-        print("PATH: ", wvpath)
         bn = os.path.basename(wvpath)
         bn = re.sub(r'\.wav$', '', bn)
         st, et = bn.split('_')
-        print(st, et, bn)
         
         try:
-            print("feature ext opensmile, from: ", wvpath)
             feature = extOpenSMILE(wvpath)
         except Exception as e:
             print(e)
             print("error: ", dir, st, et)
             continue
 
-        print("Feature:", feature)
         vt = toStr(feature, fnames)
         wf.write(f'{id}\t{st}\t{et}\t{vt}\n')
-
 
 wf.close
 
