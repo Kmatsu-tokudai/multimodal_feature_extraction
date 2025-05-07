@@ -1,10 +1,10 @@
 # SpeechBrainによる音声感情分析
+# conda activate speechbrain
 import sys, os, re, glob
 import pandas as pd
 import numpy as np
 import wave
 # SpeechBrain
-#import speechbrain as sb
 from speechbrain.inference.interfaces import foreign_class
 
 classifier = foreign_class(source="speechbrain/emotion-recognition-wav2vec2-IEMOCAP", 
@@ -86,22 +86,18 @@ wf.write(f'id\tstart\tend\tvector\temotion_hap-ang-sad-neu\n')
 fdir='./split_wav'
 for dirpath in glob.glob(f'{fdir}/*'):
     dir = dirpath.split('/')[-1]
-    print(dir)
     id = dir #, ctype = dir.split('_')
     for wvpath in glob.glob(f'{dirpath}/*.wav'):
-        print(wvpath)
         bn = os.path.basename(wvpath)
         bn = re.sub(r'\.wav$', '', bn)
         st, et = bn.split('_')
         ov, emo = estSpeechBrain(wvpath)
         estr = ''
-        #for k,v in sorted(emo.items()):
         for e in ['hap', 'ang', 'sad', 'neu']:
             estr += f'{emo[e]:.3f} '
         estr = estr.rstrip(' ')
         vt = toStr(ov)
         wf.write(f'{id}\t{st}\t{et}\t{vt}\t{estr}\n')        
-
 
 wf.close
 
