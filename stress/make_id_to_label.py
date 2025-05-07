@@ -18,14 +18,10 @@ for path in glob.glob(f'{idir}/*.tsv'):
     for score, avg in df[['総合得点_228（114-171）', '項目平均']].values:
         sc = score
         ag = avg
-        break
-
-    
-    #wf.write(f'{id}\t{sc}\t{ag}\n')
+        break    
     idh[id] = [sc, ag]
     scores.append(sc)
     avgs.append(ag)
-#wf.close
 
 
 print(np.mean(avgs), np.max(avgs), np.min(avgs), np.median(avgs))
