@@ -3,7 +3,6 @@
 # conda activate moviepy
 #
 import sys, os, re, glob
-#import feat
 from feat import Detector
 
 
