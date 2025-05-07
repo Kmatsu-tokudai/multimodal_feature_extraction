@@ -1,7 +1,23 @@
 # multimodal_feature_extraction
 extract multimodal feature from audio, video, text data
 
-- make_textFeature.py で使用するモデルは，自分でダウンロードする
+- makeTextFeature.py
+  - BERT(sentiment): nlptown/bert-base-multilingual-uncased-sentiment
+  - E5(sentiment): Numind/e5-multilingual-sentiment_analysis
+  - Sentiment_JA2:  https://github.com/sugiyamath/sentiment_ja2
+  - RoSEtta: pkshatech/RoSEtta-base-ja
+
+- extOpenSMILEfeature.py
+  - FeatureSet.GeMAPSv01a
+- extSpeechBrainFeature.py
+  - https://huggingface.co/speechbrain/emotion-recognition-wav2vec2-IEMOCAP
+- extPyFeatFeature.py
+  - https://github.com/cosanlab/py-feat
+- extHuBERTfeature.py
+  - HuBERT: https://huggingface.co/rinna/japanese-hubert-base
+  - Wav2Vec: https://huggingface.co/rinna/japanese-wav2vec2-base
+  
+- make_textFeature.py で使用するモデル(model.pkl)は，自分でダウンロードする
 
 ```
  with open("./model/model.pkl", "rb") as f:
