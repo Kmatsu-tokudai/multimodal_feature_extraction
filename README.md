@@ -1,13 +1,13 @@
 # multimodal_feature_extraction
 extract multimodal feature from audio, video, text data
 
- make_textFeature.py で使用するモデルは，自分でダウンロードする
+- make_textFeature.py で使用するモデルは，自分でダウンロードする
 
 > with open("./model/model.pkl", "rb") as f:
 >    vect, models = pickle.load(f)
 
-以下のSentiment_JA2という感情分析モデル
- https://github.com/sugiyamath/sentiment_ja2
+- 以下のSentiment_JA2という感情分析モデル
+  - https://github.com/sugiyamath/sentiment_ja2
 
 
 - 準備するコーパスは，音声データ，書き起こしテキスト，動画データを発話単位で分割したデータ
@@ -19,6 +19,6 @@ extract multimodal feature from audio, video, text data
   - ラベル付けは，閾値を中央値により定めている
   
 - うつデータセット
-  理工学部(riko)と医学部(igakubu)でディレクトリを分けている
-  そのほかは基本的に同じ
-  ラベル付けは，PHO9の中央値を基に定める（ストレス傾向を見たいので，うつ状態のレベルが高いか低いかがわかればよいため）
+  - 理工学部(riko)と医学部(igakubu)でディレクトリを分けている
+  - そのほかは基本的に同じ
+  - ラベル付けは，PHO9の中央値を基に定める（ストレス傾向を見たいので，うつ状態のレベルが高いか低いかがわかればよいため）
