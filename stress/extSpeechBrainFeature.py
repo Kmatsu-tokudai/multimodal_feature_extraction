@@ -1,10 +1,10 @@
 # SpeechBrainによる音声感情分析
+# conda activate speechbrain
 import sys, os, re, glob
 import pandas as pd
 import numpy as np
 import wave
 # SpeechBrain
-#import speechbrain as sb
 from speechbrain.inference.interfaces import foreign_class
 
 classifier = foreign_class(source="speechbrain/emotion-recognition-wav2vec2-IEMOCAP", 
