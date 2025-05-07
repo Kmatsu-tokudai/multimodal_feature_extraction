@@ -1,4 +1,5 @@
 # OpenSMILEによる音響特徴抽出
+# conda activate opensmile
 import sys, os, re, glob
 #import pandas as pd
 import numpy as np
