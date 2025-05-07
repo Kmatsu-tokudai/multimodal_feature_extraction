@@ -1,13 +1,10 @@
-#from pyannote.audio import Pipeline
+# ReazonSpeechで音声認識
+# 無音区間で音声データを分割
+# conda activate reazon
 import sys, os, glob
 import re
-#from pyannote.audio import Audio
 from reazonspeech.nemo.asr import load_model, transcribe, audio_from_path
-
-#from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor, pipeline
-#from huggingface_hub import hf_hub_download, snapshot_download
 import yaml
-#import os
 import pathlib
 import numpy as np
 
@@ -18,11 +15,9 @@ import torch
 from pydub import AudioSegment
 import wave
 
-#device = "cuda:0" if torch.cuda.is_available() else "cpu"
-#torch_dtype = torch.float16 if torch.cuda.is_available() else torch.float32
 
 print("load...")
-model = load_model()#device=device)
+model = load_model()#
 print("load ok!")
 
 def toStr(vec):
@@ -34,13 +29,10 @@ def toStr(vec):
 
 import os
 
-#import torch
 os.environ['HUGGINGFACE_HUB_CACHE'] = './assets'
 
-#HF_TOKEN = "{作成したHugging Faceのトークン}"
-HF_TOKEN='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'
-
-
+# HuggingFaceHubのトークンは各自で取得する
+HF_TOKEN='TOKEN'
 
 # 1. 音声ファイルの読み込み
 sounddir='./video_and_audio/audio'
@@ -50,26 +42,20 @@ for ctype in ['riko', 'igakubu']:
     print(ctype)
     for path in glob.glob(f'{sounddir}/{ctype}/*'):
         audio_file = path #"your_audio_file.m4a"
-        print(path)
         bn = os.path.basename(audio_file)
-        #sound = AudioSegment.from_file(audio_file, format="m4a")
         sounds.append(audio_file)
-        print(bn)
         metadata.append([ctype, bn])
 
 print("load file ok.")
 
 # 3. 音声認識とTSVファイルの出力
 def transcribe_audio(sound, wf, meta, output_dir):
-
-    #wf.write("AuthorType\tFileName\tStart (ms)\tEnd (ms)\tTranscription\n")
     seg = Segmenter(vad_engine='smn', detect_gender=False)
     segmentation = seg(sound)
     checks = {}
     nAudio, audio_chunk = '', ''
     for segment in segmentation:
         segment_label = segment[0]
-        #print(start, end)
         if segment_label == 'speech':
             start = int(segment[1] * 1000)
             end = int(segment[2] * 1000)
