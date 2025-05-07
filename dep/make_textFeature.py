@@ -1,19 +1,16 @@
 # BERT-senti, E5-senti, RoSEtta, sentimentjA2
-# GINZA-（単語，意味素）
 # などの特徴量抽出を行う
-#
+# conda activate bert
 
 import sys, os, re, glob
-#
 import numpy as np
 import pandas as pd
-#
-# Sentiment_Ja2用
+
+# Sentiment_Ja2用 (モデルファイル必要）
 import pickle
 import pprint
 from sudachipy import tokenizer
 from sudachipy import dictionary
-
 
 # pkshatech/RoSEtta-base-ja(テキスト特徴量)用
 from sentence_transformers import SentenceTransformer
@@ -32,10 +29,7 @@ def toStr(vec):
     s = s.rstrip(' ')
     return s
 
-
 rosetta_model = SentenceTransformer("pkshatech/RoSEtta-base-ja",trust_remote_code=True)
-#e5_tokenizer = AutoTokenizer.from_pretrained('intfloat/multilingual-e5-large')
-#e5_model = AutoModel.from_pretrained('intfloat/multilingual-e5-large')
 e5_tokenizer = AutoTokenizer.from_pretrained("Numind/e5-multilingual-sentiment_analysis")
 e5_model = AutoModel.from_pretrained("Numind/e5-multilingual-sentiment_analysis")
 bert_modelname='nlptown/bert-base-multilingual-uncased-sentiment'
@@ -64,8 +58,6 @@ def extRosetta( input_texts):
 
 # E5（テキストベクトル）の抽出
 def extE5( input_texts):
-    #tokenizer = AutoTokenizer.from_pretrained('intfloat/multilingual-e5-large')
-    #model = AutoModel.from_pretrained('intfloat/multilingual-e5-large')
     # Tokenize the input texts
     batch_dict = e5_tokenizer(input_texts, max_length=512, padding=True, truncation=True, return_tensors='pt')
     outputs = e5_model(**batch_dict)
@@ -79,11 +71,6 @@ def extE5( input_texts):
 
 # BERT(sentiment)の抽出
 def extBERTsenti( input_texts):
-    #modelname='nlptown/bert-base-multilingual-uncased-sentiment'
-    #model = AutoModel.from_pretrained(modelname)
-    #tokenizer = AutoTokenizer.from_pretrained(modelname)
-    #device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
-    #model.to(device)
     size = 256
     text = input_texts[0]
     encoding = bert_tokenizer(
@@ -108,10 +95,6 @@ def tok( x, tokenizer_obj, mode):
 # SentimentJA2によるテキスト感情分析
 def extSJA2( input_texts):
     emotions = ['angry', 'disgust', 'fear', 'happy', 'sad', 'surprise']
-    #with open("./model/model.pkl", "rb") as f:
-    #    vect, models = pickle.load(f)
-    #tokenizer_obj = dictionary.Dictionary().create()
-    #mode = tokenizer.Tokenizer.SplitMode.C
     v = vect.transform(tok(x, tokenizer_obj, mode) for x in input_texts)
     out = [{"text": x} for x in input_texts]
     for n, m in models:
@@ -120,12 +103,9 @@ def extSJA2( input_texts):
 
     results = []
     for i, (txt, o) in enumerate(zip(input_texts, out)):
-        #svs = ''
         vv = []
         for e in emotions:
-            #svs += f'{o[e]:.3f}\t'
             vv.append(o[e])
-        #svs = svs.rstrip('\t')
         results.append([txt, vv])
 
     return results
@@ -136,7 +116,6 @@ def get_vector( feat):
         fm.append(np.asarray(f))
     v = np.mean(fm, axis=0)
     return v
-
 
 
 def main():
@@ -159,29 +138,24 @@ def main():
         except Exception as e:            
             print("Bert Error:", txt)
             break
-            #continue
 
         try:
             e5 = extE5([txt])
         except Exception as e:
             print("E5 error: ", txt)
             break
-            #continue
 
         try:
             rose = extRosetta([txt])
         except Exception as e:
             print("Rosetta error:", txt)
             break
-            #continue
         
         try:
             sj2 = extSJA2([txt])
         except Exception as e:
             print("SentiJA2 error!", txt)
             break
-            #continue
-        
 
         bstr = toStr(bert)
         estr = toStr(e5[0])
@@ -191,18 +165,10 @@ def main():
             vec.append(sd[1])
         vec = np.mean(vec, axis=0)
         sjs = toStr(vec)
-
-        #print("SJ2: ==> ", sjs)
         rss = toStr(rose[0])
-        #print("Rosetta: ==> ", rss)
-
         wf.write(f'{at}\t{fn}\t{st}\t{en}\t{txt}\t{bstr}\t{estr}\t{sjs}\t{rss}\n')
-        #break
-
+    
     wf.close
-
-
-
 
 
 if __name__ == '__main__':
