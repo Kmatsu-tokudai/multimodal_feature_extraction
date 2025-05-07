@@ -30,7 +30,7 @@ def chg_sampling_rate(wpath):
     # 音声ファイルを読み込む
     audio = AudioSegment.from_file(wpath)
     # サンプリングレートを変更（例：16kHzに変更）
-    audio_16k = audio.set_frame_rate(32000) #8000) #16000)    
+    audio_16k = audio.set_frame_rate(32000) 
     # 変更した音声を保存
     bn = os.path.basename(wpath)    
     wpath = re.sub(r'\.wav$', '', bn)
@@ -54,10 +54,8 @@ def get_vector(self, feat):
 
 # HuBERT（音声特徴）の抽出
 def extHuBERT(wpath):
-
     audio_file = wpath
     raw_speech_16kHz, sr = sf.read(audio_file)
-    #print(raw_speech_16kHz)
     inputs = hu_feature_extractor(
         raw_speech_16kHz,    
         return_tensors="pt",
@@ -144,7 +142,6 @@ def toExt(speech_path, ftype):
         return sumv
 
 
-
 for ftype in ['wav2vec', 'hubert']:
     print(f"Feature: {ftype} ...")
     odir = f'./{ftype}_feature_fifty'
@@ -154,25 +151,13 @@ for ftype in ['wav2vec', 'hubert']:
     wf = {}
     for ct in ['cou', 'sub']:
         wf[ct] = open(f'{odir}/{ftype}_{ct}.tsv', 'w')
-        #wf[ct].write(f'id\tstart\tend\tvector\temotion_hap-ang-sad-neu\n')
-        #wf = open(f'{odir}/{ftype}.tsv', 'w')
-        wf[ct].write(f'id\tstart\tend\tvector\t{ftype}\n')
-
+        wf[ct].write(f'id\tstart\tend\t{ftype}\n')
+        
     fdir='./fifty_split_wav'
-    flg = 0
     for dirpath in glob.glob(f'{fdir}/*'):
         dir = dirpath.split('/')[-1]
-        #print(dir)
         id, ctype = dir.split('_')
-        for wvpath in glob.glob(f'{dirpath}/*.wav'):
-            #print(wvpath)
-            #if wvpath != './fifty_split_wav/2212262000_cou/27521_27530.wav' or flg == 0:
-            #    continue
-            #else:
-            #    flg = 1
-            #print(wvpath)
-
-                
+        for wvpath in glob.glob(f'{dirpath}/*.wav'):                
             bn = os.path.basename(wvpath)
             bn = re.sub(r'\.wav$', '', bn)
             st, et = bn.split('_')
@@ -188,8 +173,6 @@ for ftype in ['wav2vec', 'hubert']:
                 continue
             vt = toStr(ov)
             wf[ctype].write(f'{id}\t{st}\t{et}\t{vt}\n')        
-
-
 
     for k,v in wf.items():
         v.close
