@@ -3,25 +3,10 @@
 # conda activate moviepy
 #
 import sys, os, re, glob
-#import feat
 from feat import Detector
 
 
 detector = Detector()
-    #face_model=img2pose,
-    #landmark_model=mobilefacenet,
-    #au_model=xgb,
-    #emotion_model = resmasknet,
-    #facepose_model = img2pose,
-    #identity_model=facenet
-    #data_type='video',
-
-    #face_model="retinaface",
-    ##landmark_model="mobilefacenet",
-    ##au_model="xgb",
-    ##emotion_model="resmasknet",
-    #face_detection_threshold=0.95, 
-#)
 
 outdir = f'./pyfeat_feature'
 if not os.path.exists(outdir):
@@ -52,5 +37,4 @@ for aut in ['igakubu', 'riko']:
             fn = re.sub(r'\.mp4$', '', fn)
             opath=f'{outdir}/{aut}/{id}/{fn}.tsv'
             video_prediction.to_csv(opath, sep='\t')
-            print(aut, num, video_prediction.head(2))
             num += 1
