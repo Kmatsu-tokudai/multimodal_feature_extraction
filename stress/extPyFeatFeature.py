@@ -7,20 +7,6 @@ from feat import Detector
 
 
 detector = Detector()
-    #face_model=img2pose,
-    #landmark_model=mobilefacenet,
-    #au_model=xgb,
-    #emotion_model = resmasknet,
-    #facepose_model = img2pose,
-    #identity_model=facenet
-    #data_type='video',
-
-    #face_model="retinaface",
-    ##landmark_model="mobilefacenet",
-    ##au_model="xgb",
-    ##emotion_model="resmasknet",
-    #face_detection_threshold=0.95, 
-#)
 
 outdir = f'./pyfeat_feature_fifty'
 if not os.path.exists(outdir):
@@ -28,8 +14,8 @@ if not os.path.exists(outdir):
 
 rdir = 'split_video_fifty'
 
+# skip frames
 num_frames = 15
-#for aut in ['igakubu', 'riko']:
 if not os.path.exists(f'{outdir}'):
     os.mkdir(f'{outdir}')
 
